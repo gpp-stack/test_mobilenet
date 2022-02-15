@@ -13,6 +13,7 @@ from __future__ import absolute_import
 import os
 import io
 import pandas as pd
+import tensorflow as tf_
 import tensorflow.compat.v1 as tf
 import sys	
 sys.path.append("tf_mod/research/")
@@ -34,11 +35,15 @@ def split(df, group):
 
 
 def create_tf_example(group, path):
-    with tf.gfile.GFile(os.path.join(path, '{}'.format(group.filename)), 'rb') as fid:
+    image = Image.open(os.path.join(path, '{}'.format(group.filename)))
+    image.save('temp.jpg')
+    with tf.gfile.GFile('temp.jpg', 'rb') as fid:
         encoded_jpg = fid.read()
     encoded_jpg_io = io.BytesIO(encoded_jpg)
     image = Image.open(encoded_jpg_io)
     width, height = image.size
+
+
 
     filename = group.filename.encode('utf8')
     image_format = b'jpg'
